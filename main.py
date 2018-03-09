@@ -1,15 +1,17 @@
 import numpy as np
-import numpy as np
 
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
 from feature_engineering import refuting_features, polarity_features, hand_features, gen_or_load_feats
 from feature_engineering import word_overlap_features
-from ext_feature_eng import tf_idf_features, sentiment_features
+from ext_feature_eng import tf_idf_features, svd_features, sentiment_features
 
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
 from utils.score import report_score, LABELS, score_submission
 from utils.system import parse_params, check_version
+
+import pdb
 
 def generate_features(stances,dataset,name):
     h, b, y = [],[],[]
@@ -26,9 +28,23 @@ def generate_features(stances,dataset,name):
 
     X_tf_idf = gen_or_load_feats(tf_idf_features, h, b, "features/tf_idf."+name+".npy")
 
+    X_svd = gen_or_load_feats(svd_features, h, b, "features/svd."+name+".npy")
+
     X_sentiment = gen_or_load_feats(sentiment_features, h, b, "features/sentiment."+name+".npy")
 
-    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_tf_idf, X_sentiment]
+    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_tf_idf, X_svd, X_sentiment]
+
+    # X = np.c_[X_hand, X_polarity, X_refuting, X_overlap]
+
+    # pdb.set_trace()
+
+    # from matplotlib import pyplot as plt
+    # plt.plot(X_tf_idf.flatten())
+    # plt.show()
+
+    # plt.plot(X_svd.flatten())
+    # plt.show()
+
     return X,y
 
 if __name__ == "__main__":
@@ -56,7 +72,6 @@ if __name__ == "__main__":
     best_score = 0
     best_fold = None
 
-
     # Classifier for each fold
     for fold in fold_stances:
         ids = list(range(len(folds)))
@@ -68,7 +83,8 @@ if __name__ == "__main__":
         X_test = Xs[fold]
         y_test = ys[fold]
 
-        clf = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
+        # clf = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
+        clf = RandomForestClassifier(n_estimators=200, random_state=14128, verbose=True)
         clf.fit(X_train, y_train)
 
         predicted = [LABELS[int(a)] for a in clf.predict(X_test)]
