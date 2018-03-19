@@ -8,10 +8,12 @@ from ext_feature_eng import tf_idf_features, svd_features, sentiment_features
 
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
-from utils.score import report_score, LABELS, score_submission
+from utils.score import report_score, LABELS, score_submission, detailed_score
 from utils.system import parse_params, check_version
 
 import pdb
+
+np.set_printoptions(threshold=np.inf)
 
 def generate_features(stances,dataset,name):
     h, b, y = [],[],[]
@@ -33,17 +35,55 @@ def generate_features(stances,dataset,name):
     X_sentiment = gen_or_load_feats(sentiment_features, h, b, "features/sentiment."+name+".npy")
 
     X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_tf_idf, X_svd, X_sentiment]
-
+    
     # X = np.c_[X_hand, X_polarity, X_refuting, X_overlap]
 
-    # pdb.set_trace()
-
     # from matplotlib import pyplot as plt
-    # plt.plot(X_tf_idf.flatten())
+    # compound = sorted(zip(X_sentiment[:,3]-X_sentiment[:,7], y), key = lambda x: x[1])
+    # plt.plot(compound)
     # plt.show()
 
-    # plt.plot(X_svd.flatten())
+    # fig1 = plt.gcf()
+    # overlap = sorted(zip(X_refuting.flatten(), y), key = lambda x: x[1])
+    # plt.plot(overlap)
+    # plt.draw()
     # plt.show()
+    # fig1.savefig('refuting.png')
+
+    # fig2 = plt.gcf()
+    # overlap = sorted(zip(X_hand.flatten(), y), key = lambda x: x[1])
+    # plt.plot(overlap)
+    # plt.draw()
+    # plt.show()
+    # fig2.savefig('hand.png')
+    
+    # fig3 = plt.gcf()
+    # overlap = sorted(zip(X_polarity.flatten(), y), key = lambda x: x[1])
+    # plt.plot(overlap)
+    # plt.draw()
+    # plt.show()
+    # fig3.savefig('polarity.png')
+
+    # fig4 = plt.gcf()
+    # tfidf = sorted(zip(X_tf_idf.flatten(), y), key = lambda x: x[1])
+    # plt.plot(tfidf)
+    # plt.draw()
+    # plt.show()
+    # fig4.savefig('tfidf.png')
+
+    # fig5 = plt.gcf()
+    # svd = sorted(zip(X_svd.flatten(), y), key = lambda x: x[1])
+    # plt.plot(svd)
+    # plt.draw()
+    # plt.show()
+    # fig5.savefig('svd.png')
+
+    # fig6 = plt.gcf()
+    # svd = sorted(zip(X_sentiment[:,3] - X_sentiment[:,7], y), key = lambda x: x[1])
+    # plt.plot(svd)
+    # plt.draw()
+    # plt.show()
+    # fig6.savefig('sentiment.png')
 
     return X,y
 
@@ -84,7 +124,7 @@ if __name__ == "__main__":
         y_test = ys[fold]
 
         # clf = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
-        clf = RandomForestClassifier(n_estimators=200, random_state=14128, verbose=True)
+        clf = RandomForestClassifier(n_estimators=1000, random_state=14128, verbose=True)
         clf.fit(X_train, y_train)
 
         predicted = [LABELS[int(a)] for a in clf.predict(X_test)]
@@ -106,7 +146,7 @@ if __name__ == "__main__":
     actual = [LABELS[int(a)] for a in y_holdout]
 
     print("Scores on the dev set")
-    report_score(actual,predicted)
+    report_score(actual,predicted, type='dev')
     print("")
     print("")
 
@@ -115,4 +155,7 @@ if __name__ == "__main__":
     actual = [LABELS[int(a)] for a in y_competition]
 
     print("Scores on the test set")
-    report_score(actual,predicted)
+    report_score(actual,predicted, type='test')
+
+    print("Break down scores")
+    detailed_score(actual,predicted)
