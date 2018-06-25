@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from feature_engineering import refuting_features, polarity_features, hand_features, gen_or_load_feats
 from feature_engineering import word_overlap_features
 from ext_feature_eng import tf_idf_features, svd_features, sentiment_features
+from ext_feature_eng import word_length
 
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
@@ -29,76 +30,22 @@ def generate_features(stances,dataset,name):
     X_hand = gen_or_load_feats(hand_features, h, b, "features/hand."+name+".npy")
 
     X_tf_idf = gen_or_load_feats(tf_idf_features, h, b, "features/tf_idf."+name+".npy")
-
     X_svd = gen_or_load_feats(svd_features, h, b, "features/svd."+name+".npy")
-
     X_sentiment = gen_or_load_feats(sentiment_features, h, b, "features/sentiment."+name+".npy")
 
-    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_tf_idf, X_svd, X_sentiment]
-    
-    # X = np.c_[X_hand, X_polarity, X_refuting, X_overlap]
+    X_word_length = gen_or_load_feats(word_length, h, b, "features/word_length."+name+".npy")
 
-    # from matplotlib import pyplot as plt
-    # compound = sorted(zip(X_sentiment[:,3]-X_sentiment[:,7], y), key = lambda x: x[1])
-    # plt.plot(compound)
-    # plt.show()
-
-    # fig1 = plt.gcf()
-    # overlap = sorted(zip(X_refuting.flatten(), y), key = lambda x: x[1])
-    # plt.plot(overlap)
-    # plt.draw()
-    # plt.show()
-    # fig1.savefig('refuting.png')
-
-    # fig2 = plt.gcf()
-    # overlap = sorted(zip(X_hand.flatten(), y), key = lambda x: x[1])
-    # plt.plot(overlap)
-    # plt.draw()
-    # plt.show()
-    # fig2.savefig('hand.png')
-    
-    # fig3 = plt.gcf()
-    # overlap = sorted(zip(X_polarity.flatten(), y), key = lambda x: x[1])
-    # plt.plot(overlap)
-    # plt.draw()
-    # plt.show()
-    # fig3.savefig('polarity.png')
-
-    # fig4 = plt.gcf()
-    # tfidf = sorted(zip(X_tf_idf.flatten(), y), key = lambda x: x[1])
-    # plt.plot(tfidf)
-    # plt.draw()
-    # plt.show()
-    # fig4.savefig('tfidf.png')
-
-    # fig5 = plt.gcf()
-    # svd = sorted(zip(X_svd.flatten(), y), key = lambda x: x[1])
-    # plt.plot(svd)
-    # plt.draw()
-    # plt.show()
-    # fig5.savefig('svd.png')
-
-    # fig6 = plt.gcf()
-    # svd = sorted(zip(X_sentiment[:,3] - X_sentiment[:,7], y), key = lambda x: x[1])
-    # plt.plot(svd)
-    # plt.draw()
-    # plt.show()
-    # fig6.savefig('sentiment.png')
-
-    return X,y
+    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_word_length]
+    return X, y
 
 if __name__ == "__main__":
     check_version()
     parse_params()
 
-    #Load the training dataset and generate folds
+    # Load the training dataset and generate folds
     d = DataSet()
     folds,hold_out = kfold_split(d,n_folds=10)
     fold_stances, hold_out_stances = get_stances_for_folds(d,folds,hold_out)
-
-    # Load the competition dataset
-    competition_dataset = DataSet("competition_test")
-    X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset, "competition")
 
     Xs = dict()
     ys = dict()
@@ -107,7 +54,6 @@ if __name__ == "__main__":
     X_holdout,y_holdout = generate_features(hold_out_stances,d,"holdout")
     for fold in fold_stances:
         Xs[fold],ys[fold] = generate_features(fold_stances[fold],d,str(fold))
-
 
     best_score = 0
     best_fold = None
@@ -140,8 +86,7 @@ if __name__ == "__main__":
             best_score = score
             best_fold = clf
 
-
-    #Run on Holdout set and report the final score on the holdout set
+    # Run on Holdout set and report the final score on the holdout set
     predicted = [LABELS[int(a)] for a in best_fold.predict(X_holdout)]
     actual = [LABELS[int(a)] for a in y_holdout]
 
@@ -150,12 +95,21 @@ if __name__ == "__main__":
     print("")
     print("")
 
-    #Run on competition dataset
+    # Load and run on competition dataset
+    competition_dataset = DataSet("competition_test")
+    X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset, "competition")
+
     predicted = [LABELS[int(a)] for a in best_fold.predict(X_competition)]
     actual = [LABELS[int(a)] for a in y_competition]
 
     print("Scores on the test set")
     report_score(actual,predicted, type='test')
+
+    # save the model to disk
+    import pickle
+    if best_fold:
+        filename = 'finalized_model.sav'
+        pickle.dump(best_fold, open(filename, 'wb'))
 
     print("Break down scores")
     detailed_score(actual,predicted)

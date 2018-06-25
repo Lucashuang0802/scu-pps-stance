@@ -1,7 +1,7 @@
 --------------------
 actual disagree count 697
-predicted disagree count 4
+predicted disagree count 18
 actual precision: 0.027426907488293392
-precision: 0.00015739975603037816
-recall: 0.005738880918220947
-F1: 0.00030639601685178094
+precision: 0.0007082989021367017
+recall: 0.02582496413199426
+F1: 0.0013787820758330144

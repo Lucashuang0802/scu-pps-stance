@@ -11,6 +11,12 @@ import statistics as s
 
 import pdb
 
+def word_length(headlines, bodies):
+    X = []
+    for _, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
+        X.append(len(bodies))
+    return X
+
 def tf_idf_features(headlines, bodies):
     X = []
     for _, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
