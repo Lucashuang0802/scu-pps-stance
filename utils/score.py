@@ -75,7 +75,10 @@ def detailed_score(actual, predicted):
         output.append("actual precision: {}".format(actual_precision))
         output.append("precision: {}".format(precision))
         output.append("recall: {}".format(recall))
-        output.append("F1: {}".format(2 * precision * recall / (precision + recall)))
+        if precision + recall != 0:
+            output.append("F1: {}".format(2 * precision * recall / (precision + recall)))
+        else:
+            output.append("F1: 0.00")
         print('\n'.join(output))
         with open("{}_evaluation.txt".format(label), "w") as f:
             f.write('\n'.join(output))

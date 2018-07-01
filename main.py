@@ -35,7 +35,7 @@ def generate_features(stances,dataset,name):
 
     X_word_length = gen_or_load_feats(word_length, h, b, "features/word_length."+name+".npy")
 
-    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_word_length]
+    X = np.c_[X_hand, X_polarity, X_refuting, X_overlap, X_word_length, X_tf_idf, X_svd, X_sentiment]
     return X, y
 
 if __name__ == "__main__":
@@ -106,10 +106,10 @@ if __name__ == "__main__":
     report_score(actual,predicted, type='test')
 
     # save the model to disk
-    import pickle
-    if best_fold:
-        filename = 'finalized_model.sav'
-        pickle.dump(best_fold, open(filename, 'wb'))
+    # import pickle
+    # if best_fold:
+    #     filename = 'finalized_model.sav'
+    #     pickle.dump(best_fold, open(filename, 'wb'))
 
     print("Break down scores")
     detailed_score(actual,predicted)
