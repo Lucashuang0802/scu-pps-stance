@@ -1,7 +1,7 @@
 --------------------
 actual agree count 1903
-predicted agree count 512
+predicted agree count 596
 actual precision: 0.0748829339314524
-precision: 0.020147168771888404
-recall: 0.26904887020493956
-F1: 0.03748718699663201
+precision: 0.023452563648526346
+recall: 0.3131897004729375
+F1: 0.04363742861326696

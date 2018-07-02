@@ -7,10 +7,6 @@ from nltk.tokenize import sent_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import pandas as pd
 
-import statistics as s
-
-import pdb
-
 def word_length(headlines, bodies):
     X = []
     for _, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
