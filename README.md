@@ -2,6 +2,14 @@
 
 The project is based upon https://github.com/FakeNewsChallenge/fnc-1-baseline
 
+# Installation
+*Note: The project is written in Python3.*
+- `pip3 install virtualenv`
+- `virtualenv venv` to create an isolated Python3 environment
+- `source venv/bin/activate` to enter the isolated Python3 environment
+- `pip3 install -r requirements.txt` to install all require developmental packages
+- `python3 main.yp` to run the project
+ 
 # How to run?
     You can simply run the project by `pyhton3 main.py`
     
