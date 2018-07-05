@@ -61,18 +61,18 @@ def report_score(actual,predicted,type=None):
 
 def detailed_score(actual, predicted):
 
+    assert len(actual) == len(predicted)
+
     def output_score(label):
         actual_count = actual.count('agree') + actual.count('disagree') + actual.count('discuss') if label == 'related' else actual.count(label)
         predict_count = predicted.count('agree') + predicted.count('disagree') + predicted.count('discuss') if label == 'related' else predicted.count(label)
         
-        precision = predict_count / len(predicted)
-        actual_precision = actual_count / len(actual)
+        precision = predict_count / len(actual)
         recall = predict_count / actual_count
         output = []
         output.append("--------------------")
         output.append("actual {} count {}".format(label, actual_count))
         output.append("predicted {} count {}".format(label, predict_count))
-        output.append("actual precision: {}".format(actual_precision))
         output.append("precision: {}".format(precision))
         output.append("recall: {}".format(recall))
         if precision + recall != 0:

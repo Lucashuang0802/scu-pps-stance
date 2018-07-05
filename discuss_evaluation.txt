@@ -1,7 +1,6 @@
 --------------------
 actual discuss count 4464
-predicted discuss count 5912
-actual precision: 0.17565812772990202
-precision: 0.23263683941289892
-recall: 1.3243727598566308
-F1: 0.39575593265722797
+predicted discuss count 5979
+precision: 0.23527328532640773
+recall: 1.3393817204301075
+F1: 0.4002409880510091

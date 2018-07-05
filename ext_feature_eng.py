@@ -21,55 +21,22 @@ def tf_idf_features(headlines, bodies):
 
         for sentence in sentences:
             clean_body = clean(sentence)
-            clean_bodies.append(" ".join(get_tokenized_lemmas(clean_body)))
+            for obj in get_tokenized_lemmas(clean_body):
+                clean_bodies.append(obj)
 
         clean_headline = clean(headline)
         clean_headline = get_tokenized_lemmas(clean_headline)
-        clean_headline = " ".join(clean_headline)   
 
-        all_text = " ".join(clean_bodies + [clean_headline])
-        vec = TfidfVectorizer(ngram_range=(1, 3))
-        vec.fit([all_text])
-
-        xHeadlineTfidf = vec.transform([clean_headline])
+        clean_headline = " ".join(clean_headline)
         clean_bodies = " ".join(clean_bodies)
-        xBodyTfidf = vec.transform([clean_bodies])
 
-        cosine = cosine_similarity(xHeadlineTfidf, xBodyTfidf)[-1][-1]
-        X.append([cosine])
+        def cosine_sim(text1, text2):
+            vectorizer = TfidfVectorizer(ngram_range=(1, 3))
+            tfidf = vectorizer.fit_transform([text1, text2])
+            return ((tfidf * tfidf.T).A)[0, 1]
 
-    return X
-
-def svd_features(headlines, bodies):
-    X = []
-    for _, (headline, body) in tqdm(enumerate(zip(headlines, bodies))):
-        clean_bodies = []
-        sentences = sent_tokenize(body)
-
-        for sentence in sentences:
-            clean_body = clean(sentence)
-            clean_bodies.append(" ".join(get_tokenized_lemmas(clean_body)))
-
-        clean_headline = clean(headline)
-        clean_headline = get_tokenized_lemmas(clean_headline)
-        clean_headline = " ".join(clean_headline)   
-
-        all_text = " ".join(clean_bodies + [clean_headline])
-        vec = TfidfVectorizer(ngram_range=(1, 3))
-        vec.fit([all_text])
-
-        xHeadlineTfidf = vec.transform([clean_headline])
-        clean_bodies = " ".join(clean_bodies)
-        xBodyTfidf = vec.transform([clean_bodies])
-
-        svd = TruncatedSVD(n_components=1, n_iter=15)
-        xHBTfidf = vstack([xHeadlineTfidf, xBodyTfidf])
-        svd.fit(xHBTfidf)
-        xHeadlineSvd = svd.transform(xHeadlineTfidf)
-        xBodySvd = svd.transform(xBodyTfidf)
-
-        cosine = cosine_similarity(xHeadlineSvd, xBodySvd)[-1][-1]
-        X.append([cosine])
+        res = cosine_sim(clean_headline, clean_bodies)
+        X.append([res])
 
     return X
 

@@ -1,7 +1,6 @@
 --------------------
 actual related count 7064
-predicted related count 6511
-actual precision: 0.27796796914964783
-precision: 0.25620745287844804
-recall: 0.9217157417893544
-F1: 0.4009606798657511
+predicted related count 6522
+precision: 0.2566403022075316
+recall: 0.9232729331823329
+F1: 0.4016380823351911
