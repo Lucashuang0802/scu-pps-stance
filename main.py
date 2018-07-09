@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from feature_engineering import hand_features, gen_or_load_feats
 from feature_engineering import word_overlap_features
-from ext_feature_eng import tf_idf_features, svd_features, sentiment_features
+from ext_feature_eng import tf_idf_features, sentiment_features
 
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
@@ -25,10 +25,9 @@ def generate_features(stances,dataset,name):
     X_hand = gen_or_load_feats(hand_features, h, b, "features/hand."+name+".npy")
 
     X_tf_idf = gen_or_load_feats(tf_idf_features, h, b, "features/tf_idf."+name+".npy")
-    X_svd = gen_or_load_feats(svd_features, h, b, "features/svd."+name+".npy")
     X_sentiment = gen_or_load_feats(sentiment_features, h, b, "features/sentiment."+name+".npy")
 
-    X = np.c_[X_hand, X_overlap, X_tf_idf, X_svd, X_sentiment]
+    X = np.c_[X_hand, X_overlap, X_tf_idf, X_sentiment]
     return X, y
 
 if __name__ == "__main__":
@@ -85,6 +84,9 @@ if __name__ == "__main__":
 
     print("Scores on the dev set")
     report_score(actual,predicted, type='dev')
+    print("Break down scores")
+    detailed_score(actual, predicted)
+
     print("")
     print("")
 
