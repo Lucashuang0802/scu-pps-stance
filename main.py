@@ -9,7 +9,7 @@ from ext_feature_eng import tf_idf_features, sentiment_features
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds
 from utils.score import report_score, LABELS, score_submission, detailed_score
-from utils.system import parse_params, check_version
+from utils.system import parse_params, check_version, check_results_dir
 
 np.set_printoptions(threshold=np.inf)
 
@@ -33,6 +33,7 @@ def generate_features(stances,dataset,name):
 if __name__ == "__main__":
     check_version()
     parse_params()
+    check_results_dir()
 
     # Load the training dataset and generate folds
     d = DataSet()
@@ -62,7 +63,7 @@ if __name__ == "__main__":
         y_test = ys[fold]
 
         # clf = GradientBoostingClassifier(n_estimators=200, random_state=14128, verbose=True)
-        clf = RandomForestClassifier(n_estimators=1000, random_state=14128, verbose=True)
+        clf = RandomForestClassifier(n_estimators=200, random_state=14128, verbose=True)
         clf.fit(X_train, y_train)
 
         predicted = [LABELS[int(a)] for a in clf.predict(X_test)]

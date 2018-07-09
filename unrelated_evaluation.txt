@@ -1,6 +1,0 @@
---------------------
-actual unrelated count 18349
-predicted unrelated count 18891
-precision: 0.7433596977924685
-recall: 1.0295383944629135
-F1: 0.8633517663726521

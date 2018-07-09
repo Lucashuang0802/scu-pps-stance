@@ -20,7 +20,12 @@ def parse_params():
         fname = os.path.join('splits', f)
         if os.path.isfile(fname):
             os.remove(fname)
+
     print("All clear")
+
+def check_results_dir():
+    if not os.path.exists('./results'):
+        os.makedirs('./results')
 
 def check_version():
     if sys.version_info.major < 3:

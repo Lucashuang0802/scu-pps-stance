@@ -1,0 +1,6 @@
+--------------------
+actual agree count 1903
+predicted agree count 584
+precision: 0.02298036438043521
+recall: 0.3068838675775092
+F1 score: 0.04275882266803339

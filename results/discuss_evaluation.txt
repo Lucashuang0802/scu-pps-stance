@@ -1,0 +1,6 @@
+--------------------
+actual discuss count 4464
+predicted discuss count 5929
+precision: 0.23330578837602803
+recall: 1.3281810035842294
+F1 score: 0.3968939317869934

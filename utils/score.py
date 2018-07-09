@@ -1,8 +1,6 @@
 #Adapted from https://github.com/FakeNewsChallenge/fnc-1/blob/master/scorer.py
 #Original credit - @bgalbraith
 
-import pdb
-
 LABELS = ['agree', 'disagree', 'discuss', 'unrelated']
 LABELS_RELATED = ['unrelated','related']
 RELATED = LABELS[0:3]
@@ -46,8 +44,8 @@ def print_confusion_matrix(cm,type=None):
         lines.append("-"*line_len)
     print('\n'.join(lines))
 
-    filename = "confusion_matrix.txt" if type == None else "confusion_matrix_{}.txt".format(type)
-    with open(filename, "w") as f:
+    filename = "./results/confusion_matrix.txt" if type == None else "./results/confusion_matrix_{}.txt".format(type)
+    with open(filename, "w+") as f:
         f.write('\n'.join(lines))
     f.close()
 
@@ -66,7 +64,7 @@ def detailed_score(actual, predicted):
     def output_score(label):
         actual_count = actual.count('agree') + actual.count('disagree') + actual.count('discuss') if label == 'related' else actual.count(label)
         predict_count = predicted.count('agree') + predicted.count('disagree') + predicted.count('discuss') if label == 'related' else predicted.count(label)
-        
+
         precision = predict_count / len(actual)
         recall = predict_count / actual_count
         output = []
@@ -75,25 +73,18 @@ def detailed_score(actual, predicted):
         output.append("predicted {} count {}".format(label, predict_count))
         output.append("precision: {}".format(precision))
         output.append("recall: {}".format(recall))
-        if precision + recall != 0:
-            output.append("F1: {}".format(2 * precision * recall / (precision + recall)))
-        else:
-            output.append("F1: 0.00")
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall != 0 else 0
+        output.append("F1 score: " + str(f1))
         print('\n'.join(output))
-        with open("{}_evaluation.txt".format(label), "w") as f:
+        with open("./results/{}_evaluation.txt".format(label), "w+") as f:
             f.write('\n'.join(output))
         f.close()
+        return f1
 
-    output_score('agree')
-    output_score('disagree')
-    output_score('discuss')
-    output_score('unrelated')
+    the_f1 = []
+    the_f1.append(output_score('agree'))
+    the_f1.append(output_score('disagree'))
+    the_f1.append(output_score('discuss'))
+    the_f1.append(output_score('unrelated'))
     output_score('related')
-
-if __name__ == "__main__":
-    actual = [0,0,0,0,1,1,0,3,3]
-    predicted = [0,0,0,0,1,1,2,3,3]
-
-    report_score([LABELS[e] for e in actual],[LABELS[e] for e in predicted])
-
-    detailed_score([LABELS[e] for e in actual],[LABELS[e] for e in predicted])
+    print('Average F1 score is ' + str(sum(the_f1) / len(the_f1)))
