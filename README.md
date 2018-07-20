@@ -8,12 +8,12 @@ The project is based upon https://github.com/FakeNewsChallenge/fnc-1-baseline
 - `virtualenv venv` to create an isolated Python3 environment
 - `source venv/bin/activate` to enter the isolated Python3 environment
 - `pip3 install -r requirements.txt` to install all require developmental packages
-- `python3 main.yp` to run the project
+- `python3 main.py` to run the project
  
 # How to run?
     You can simply run the project by `python3 main.py`
     
-We have cached features generation in the `features` folder. If you would like to modify any of these features, make sure you remove the related cached files before perfroming any trainings. For instances, you will have to remove all tf-idf cahces files (tf_idf.*.npy) if you change anything on the `tf_idf_features` in the `ext_feature_eng.py` file.
+We have cached features generation in the `features` folder. If you would like to modify any of these features, make sure you remove the related cached files before performing any trainings. For instances, you will have to remove all tf-idf cahces files (tf_idf.*.npy) if you change anything on the `tf_idf_features` in the `ext_feature_eng.py` file.
 
 # Evaluation:
 ##### Please check the following files for analytics:
