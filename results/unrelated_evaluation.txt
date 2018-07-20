@@ -1,6 +1,6 @@
 --------------------
 actual unrelated count 18349
 predicted unrelated count 18896
-precision: 0.955175698560542
-recall: 0.983650335168129
-F1 score: 0.9692039199892603
+precision: 0.7435564474875064
+recall: 1.029810888876778
+F1 score: 0.8635802751245373
