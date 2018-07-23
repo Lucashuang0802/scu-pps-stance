@@ -11,7 +11,7 @@ The project is based upon https://github.com/FakeNewsChallenge/fnc-1-baseline
 - `python3 main.py` to run the project
  
 # How to run?
-    You can simply run the project by `pyhton3 main.py`
+    You can simply run the project by `python3 main.py`
     
 We have cached features generation in the `features` folder. If you would like to modify any of these features, make sure you remove the related cached files before performing any trainings. For instances, you will have to remove all tf-idf cahces files (tf_idf.*.npy) if you change anything on the `tf_idf_features` in the `ext_feature_eng.py` file.
 

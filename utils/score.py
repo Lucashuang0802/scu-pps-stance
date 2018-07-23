@@ -1,5 +1,7 @@
 #Adapted from https://github.com/FakeNewsChallenge/fnc-1/blob/master/scorer.py
 #Original credit - @bgalbraith
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
 
 LABELS = ['agree', 'disagree', 'discuss', 'unrelated']
 LABELS_RELATED = ['unrelated','related']
@@ -62,11 +64,14 @@ def detailed_score(actual, predicted):
     assert len(actual) == len(predicted)
 
     def output_score(label):
-        actual_count = actual.count('agree') + actual.count('disagree') + actual.count('discuss') if label == 'related' else actual.count(label)
-        predict_count = predicted.count('agree') + predicted.count('disagree') + predicted.count('discuss') if label == 'related' else predicted.count(label)
+        actual_out = [1 if x != "unrelated" else 0 for x in actual] if label == 'related' else [1 if x == label else 0 for x in actual]
+        predicted_out = [1 if x != "unrelated" else 0 for x in predicted] if label == 'related' else [1 if x == label else 0 for x in predicted]
 
-        precision = predict_count / len(actual)
-        recall = predict_count / actual_count
+        actual_count = actual_out.count(1)
+        predict_count = predicted_out.count(1)
+
+        precision = precision_score(actual_out, predicted_out)
+        recall = recall_score(actual_out, predicted_out)
         output = []
         output.append("--------------------")
         output.append("actual {} count {}".format(label, actual_count))
