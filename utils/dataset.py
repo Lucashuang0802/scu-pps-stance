@@ -20,7 +20,6 @@ class DataSet():
             s['Body ID'] = int(s['Body ID'])
             if s['Stance'] == 'unrelated':
                 unrelated_stance.append(s)
-
             else:
                 related_stance.append(s)
 
