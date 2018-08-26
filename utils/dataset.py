@@ -15,7 +15,7 @@ class DataSet():
 
         unrelated_stance = []
         related_stance = []
-
+        #make the body ID an integer value
         for s in self.stances:
             s['Body ID'] = int(s['Body ID'])
             if s['Stance'] == 'unrelated':
