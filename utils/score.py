@@ -90,8 +90,6 @@ def detailed_score(actual, predicted):
     the_f1.append(output_score('agree'))
     the_f1.append(output_score('disagree'))
     the_f1.append(output_score('discuss'))
-    score = output_score('unrelated')
-    if score != 0:
-        the_f1.append(score)
+    the_f1.append(output_score('unrelated'))
     output_score('related')
     print('Average F1 score is ' + str(sum(the_f1) / len(the_f1)))

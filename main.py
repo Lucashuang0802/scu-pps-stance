@@ -99,10 +99,10 @@ if __name__ == "__main__":
     # Load and run on competition dataset
     competition_dataset = DataSet("competition_test")
     if a:
-        X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset,
+        X_competition, y_competition = generate_features(competition_dataset.related_stance, competition_dataset,
                                                          "competition")
     else:
-        X_competition, y_competition = generate_features(competition_dataset.related_stance, competition_dataset,
+        X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset,
                                                          "competition")
 
     predicted = [LABELS[int(a)] for a in best_fold.predict(X_competition)]

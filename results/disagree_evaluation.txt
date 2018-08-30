@@ -1,6 +1,6 @@
 --------------------
 actual disagree count 697
-predicted disagree count 10
+predicted disagree count 4
 precision: 0.0
 recall: 0.0
 F1 score: 0
