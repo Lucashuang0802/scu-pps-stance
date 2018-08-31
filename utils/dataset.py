@@ -13,9 +13,18 @@ class DataSet():
         articles = self.read(bodies)
         self.articles = dict()
 
+        unrelated_stance = []
+        related_stance = []
         #make the body ID an integer value
         for s in self.stances:
             s['Body ID'] = int(s['Body ID'])
+            if s['Stance'] == 'unrelated':
+                unrelated_stance.append(s)
+            else:
+                related_stance.append(s)
+
+        self.related_stance = related_stance
+        self.unrelated_stance = unrelated_stance
 
         #copy all bodies into a dictionary
         for article in articles:
@@ -23,6 +32,8 @@ class DataSet():
 
         print("Total stances: " + str(len(self.stances)))
         print("Total bodies: " + str(len(self.articles)))
+        print("Total unrelated stances: " + str(len(self.unrelated_stance)))
+        print("Total related stances: " + str(len(self.related_stance)))
 
 
 
