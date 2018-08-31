@@ -27,7 +27,6 @@ def score_submission(gold_labels, test_labels):
 
     return score, cm
 
-
 def print_confusion_matrix(cm,type=None):
     lines = []
     header = "|{:^11}|{:^11}|{:^11}|{:^11}|{:^11}|".format('', *LABELS)
