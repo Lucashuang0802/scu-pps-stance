@@ -27,7 +27,6 @@ def score_submission(gold_labels, test_labels):
 
     return score, cm
 
-
 def print_confusion_matrix(cm,type=None):
     lines = []
     header = "|{:^11}|{:^11}|{:^11}|{:^11}|{:^11}|".format('', *LABELS)
@@ -90,6 +89,9 @@ def detailed_score(actual, predicted):
     the_f1.append(output_score('agree'))
     the_f1.append(output_score('disagree'))
     the_f1.append(output_score('discuss'))
-    the_f1.append(output_score('unrelated'))
+    score = output_score('unrelated')
+    if score != 0:
+        the_f1.append(score)
     output_score('related')
+
     print('Average F1 score is ' + str(sum(the_f1) / len(the_f1)))
