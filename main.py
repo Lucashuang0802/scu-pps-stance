@@ -32,14 +32,14 @@ def generate_features(stances,dataset,name):
 
 if __name__ == "__main__":
     check_version()
-    origin_or_related = parse_params()
+    is_full_set = parse_params()
     check_results_dir()
 
     # Load the training dataset and generate folds
     d = DataSet()
     folds,hold_out = kfold_split(d,n_folds=10)
 
-    if origin_or_related:
+    if is_full_set:
         fold_stances, hold_out_stances = get_stances_for_folds(d,folds,hold_out)
     else:
         fold_stances, hold_out_stances = get_related_stances_for_folds(d, folds, hold_out)
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     # Load and run on competition dataset
     competition_dataset = DataSet("competition_test")
-    if origin_or_related:
+    if is_full_set:
         X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset,
                                                          "competition")
     else:

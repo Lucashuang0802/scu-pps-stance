@@ -6,7 +6,7 @@ import argparse
 def parse_params():
     parser = argparse.ArgumentParser(description='FakeNewsChallenge fnc-1-baseline')
     parser.add_argument('-c', '--clean-cache', action='store_true', default=False, help="clean cache files")
-    parser.add_argument('-v',  action="store_true", default=False, dest="relatedOrNot",help='related or not')
+    parser.add_argument('-r',  action="store_false", default=True, dest="is_full_set",help='related or not')
     params = parser.parse_args()
 
     if not params.clean_cache:
@@ -23,10 +23,7 @@ def parse_params():
                 os.remove(fname)
         print("All clear")
 
-    if not params.relatedOrNot:
-        return True
-    else:
-        return False
+    return True if params.is_full_set else False
 
 def check_results_dir():
     if not os.path.exists('./results'):
