@@ -2,12 +2,14 @@ import sys
 import os
 import re
 import argparse
+from enum import Enum
 
 def parse_params():
     parser = argparse.ArgumentParser(description='FakeNewsChallenge fnc-1-baseline')
     parser.add_argument('-c', '--clean-cache', action='store_true', default=False, help="clean cache files")
     parser.add_argument('-r',  action="store_false", default=True, dest="is_full_set",help='related or not')
     params = parser.parse_args()
+    params_enum = Enum('args', vars(params))
 
     if not params.clean_cache:
         pass
@@ -23,7 +25,7 @@ def parse_params():
                 os.remove(fname)
         print("All clear")
 
-    return True if params.is_full_set else False
+    return params_enum
 
 def check_results_dir():
     if not os.path.exists('./results'):
