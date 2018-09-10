@@ -7,7 +7,7 @@ from feature_engineering import word_overlap_features
 from ext_feature_eng import tf_idf_features, sentiment_features
 
 from utils.dataset import DataSet
-from utils.generate_test_splits import kfold_split, get_stances_for_folds
+from utils.generate_test_splits import kfold_split, get_stances_for_folds, get_related_stances_for_folds
 from utils.score import report_score, LABELS, score_submission, detailed_score
 from utils.system import parse_params, check_version, check_results_dir
 
@@ -32,13 +32,17 @@ def generate_features(stances,dataset,name):
 
 if __name__ == "__main__":
     check_version()
-    parse_params()
+    params = parse_params()
     check_results_dir()
 
     # Load the training dataset and generate folds
     d = DataSet()
     folds,hold_out = kfold_split(d,n_folds=10)
-    fold_stances, hold_out_stances = get_stances_for_folds(d,folds,hold_out)
+
+    if params.is_full_set:
+        fold_stances, hold_out_stances = get_stances_for_folds(d,folds,hold_out)
+    else:
+        fold_stances, hold_out_stances = get_related_stances_for_folds(d, folds, hold_out)
 
     Xs = dict()
     ys = dict()
@@ -93,7 +97,12 @@ if __name__ == "__main__":
 
     # Load and run on competition dataset
     competition_dataset = DataSet("competition_test")
-    X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset, "competition")
+    if params.is_full_set:
+        X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset,
+                                                         "competition")
+    else:
+        X_competition, y_competition = generate_features(competition_dataset.related_stance, competition_dataset,
+                                                         "competition")
 
     predicted = [LABELS[int(a)] for a in best_fold.predict(X_competition)]
     actual = [LABELS[int(a)] for a in y_competition]

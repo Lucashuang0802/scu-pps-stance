@@ -17,12 +17,15 @@ class DataSet():
         for s in self.stances:
             s['Body ID'] = int(s['Body ID'])
 
+        self.related_stance = list(filter(lambda stance: stance['Stance'] != 'unrelated', self.stances))
+
         #copy all bodies into a dictionary
         for article in articles:
             self.articles[int(article['Body ID'])] = article['articleBody']
 
         print("Total stances: " + str(len(self.stances)))
         print("Total bodies: " + str(len(self.articles)))
+        print("Total related stances: " + str(len(self.related_stance)))
 
 
 
