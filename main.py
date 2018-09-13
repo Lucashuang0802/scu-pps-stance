@@ -8,7 +8,7 @@ from ext_feature_eng import tf_idf_features, sentiment_features
 
 from utils.dataset import DataSet
 from utils.generate_test_splits import kfold_split, get_stances_for_folds, get_related_stances_for_folds
-from utils.score import report_score, LABELS, score_submission, detailed_score
+from utils.score import report_score, LABELS,  detailed_score, get_f1_score
 from utils.system import parse_params, check_version, check_results_dir
 
 np.set_printoptions(threshold=np.inf)
@@ -38,8 +38,9 @@ if __name__ == "__main__":
     # Load the training dataset and generate folds
     d = DataSet()
     folds,hold_out = kfold_split(d,n_folds=10)
+    is_full_set = params.is_full_set
 
-    if params.is_full_set:
+    if is_full_set:
         fold_stances, hold_out_stances = get_stances_for_folds(d,folds,hold_out)
     else:
         fold_stances, hold_out_stances = get_related_stances_for_folds(d, folds, hold_out)
@@ -73,8 +74,8 @@ if __name__ == "__main__":
         predicted = [LABELS[int(a)] for a in clf.predict(X_test)]
         actual = [LABELS[int(a)] for a in y_test]
 
-        fold_score, _ = score_submission(actual, predicted)
-        max_fold_score, _ = score_submission(actual, actual)
+        fold_score = get_f1_score(actual, predicted, is_full_set)
+        max_fold_score = get_f1_score(actual, actual, is_full_set)
 
         score = fold_score/max_fold_score
 
@@ -88,16 +89,16 @@ if __name__ == "__main__":
     actual = [LABELS[int(a)] for a in y_holdout]
 
     print("Scores on the dev set")
-    report_score(actual,predicted, type='dev')
+    report_score(actual,predicted, is_full_set, type='dev')
     print("Break down scores")
-    detailed_score(actual, predicted)
+    detailed_score(actual, predicted, is_full_set)
 
     print("")
     print("")
 
     # Load and run on competition dataset
     competition_dataset = DataSet("competition_test")
-    if params.is_full_set:
+    if is_full_set:
         X_competition, y_competition = generate_features(competition_dataset.stances, competition_dataset,
                                                          "competition")
     else:
@@ -108,7 +109,7 @@ if __name__ == "__main__":
     actual = [LABELS[int(a)] for a in y_competition]
 
     print("Scores on the test set")
-    report_score(actual,predicted, type='test')
+    report_score(actual,predicted,is_full_set, type='test')
 
     # save the model to disk
     # import pickle
@@ -117,4 +118,4 @@ if __name__ == "__main__":
     #     pickle.dump(best_fold, open(filename, 'wb'))
 
     print("Break down scores")
-    detailed_score(actual,predicted)
+    detailed_score(actual,predicted,is_full_set)
